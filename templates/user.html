@@ -1,0 +1,1693 @@
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #0b0f17;
+        --bg-secondary: #111722;
+        --card: #151b27;
+        --card-hover: #192130;
+        --border: #242d3d;
+        --border-hover: #344158;
+        --text: #f3f4f6;
+        --text-secondary: #9ca3af;
+        --text-muted: #64748b;
+        --blue: #3b82f6;
+        --blue-hover: #2563eb;
+        --green: #22c55e;
+        --green-bg: rgba(34, 197, 94, .12);
+        --red: #ef4444;
+        --red-bg: rgba(239, 68, 68, .10);
+    }
+
+    html,
+    body {
+        margin: 0;
+        min-height: 100%;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Arial,
+            sans-serif;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    .container {
+        width: min(1016px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 60px;
+    }
+
+    /* HEADER */
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--text);
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, .15);
+        border: 1px solid rgba(59, 130, 246, .35);
+        color: #60a5fa;
+        font-size: 16px;
+        font-weight: 800;
+    }
+
+    .brand-title {
+        font-size: 18px;
+        font-weight: 750;
+    }
+
+    .brand-subtitle {
+        margin-top: 2px;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 9px;
+        border: 1px solid var(--border);
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .15s;
+    }
+
+    .back-button:hover {
+        background: var(--card);
+        border-color: var(--border-hover);
+        color: var(--text);
+    }
+
+    /* USER HEADER */
+
+    .user-card {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+    }
+
+    .user-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .user-header-main {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-avatar {
+        width: 52px;
+        height: 52px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: rgba(59, 130, 246, .13);
+        border: 1px solid rgba(59, 130, 246, .25);
+        color: #60a5fa;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .user-title-wrap {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .user-name {
+        margin: 0;
+        color: var(--text);
+        font-size: 24px;
+        font-weight: 750;
+        word-break: break-word;
+    }
+
+    .token {
+        margin-top: 5px;
+        color: var(--text-muted);
+        font-family: monospace;
+        font-size: 11px;
+        word-break: break-all;
+    }
+
+    .status {
+        flex-shrink: 0;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .enabled {
+        background: var(--green-bg);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, .18);
+    }
+
+    .disabled {
+        background: var(--red-bg);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, .18);
+    }
+
+    /* SECTIONS */
+
+    .section {
+        padding: 22px 24px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child {
+        border-bottom: none;
+    }
+
+    .section-title {
+        margin-bottom: 13px;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .section-description {
+        margin-top: -7px;
+        margin-bottom: 14px;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    /* MULTILINK */
+
+    .multilink-box {
+        display: flex;
+        gap: 9px;
+    }
+
+    .multilink-input {
+        flex: 1;
+        min-width: 0;
+        padding: 11px 13px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        outline: none;
+        background: var(--bg-secondary);
+        color: #cbd5e1;
+        font-size: 13px;
+    }
+
+    .multilink-input:focus {
+        border-color: rgba(59, 130, 246, .55);
+    }
+
+    .copy-button {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: .15s;
+    }
+
+    .copy-button:hover {
+        border-color: var(--border-hover);
+        background: var(--card-hover);
+        color: var(--text);
+    }
+
+    /* SETTINGS */
+
+    .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .field-label {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .name-input,
+    .source-input {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        outline: none;
+        background: var(--bg-secondary);
+        color: var(--text);
+        font-size: 13px;
+    }
+
+    .name-input:focus,
+    .source-input:focus {
+        border-color: rgba(59, 130, 246, .55);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .08);
+    }
+
+    .status-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 13px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg-secondary);
+    }
+
+    .status-description strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--text);
+        font-size: 13px;
+    }
+
+    .status-description span {
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    .switch {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+
+    .switch input {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+
+    .slider {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: #374151;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .slider:before {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        left: 3px;
+        top: 3px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        transition: .2s;
+    }
+
+    .switch input:checked + .slider {
+        background: var(--green);
+    }
+
+    .switch input:checked + .slider:before {
+        transform: translateX(20px);
+        background: #fff;
+    }
+
+    .save-button {
+        align-self: flex-start;
+        padding: 10px 15px;
+        border: 1px solid rgba(59, 130, 246, .35);
+        border-radius: 9px;
+        background: var(--blue);
+        color: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 650;
+        transition: .15s;
+    }
+
+    .save-button:hover {
+        background: var(--blue-hover);
+    }
+
+    /* SOURCES */
+
+    .sources-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .source {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .source:last-child {
+        border-bottom: none;
+    }
+
+    .source-number {
+        width: 28px;
+        flex-shrink: 0;
+        color: #60a5fa;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .source-url {
+        flex: 1;
+        min-width: 0;
+        color: var(--text-secondary);
+        font-family: monospace;
+        font-size: 11px;
+        line-height: 1.5;
+        word-break: break-all;
+    }
+
+    .delete-source {
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+        border: 1px solid rgba(239, 68, 68, .25);
+        border-radius: 8px;
+        background: transparent;
+        color: #f87171;
+        cursor: pointer;
+        transition: .15s;
+    }
+
+    .delete-source:hover {
+        background: rgba(239, 68, 68, .10);
+        border-color: rgba(239, 68, 68, .45);
+    }
+
+    .add-source {
+        display: flex;
+        gap: 9px;
+        margin-top: 15px;
+    }
+
+    .add-source .source-input {
+        flex: 1;
+    }
+
+    .add-source-button {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border: 1px solid rgba(59, 130, 246, .35);
+        border-radius: 9px;
+        background: var(--blue);
+        color: #fff;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        transition: .15s;
+    }
+
+    .add-source-button:hover {
+        background: var(--blue-hover);
+    }
+
+    .empty {
+        padding: 10px 0;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    /* DANGER */
+
+    .danger-section {
+        border-top: 1px solid rgba(239, 68, 68, .12);
+    }
+
+    .danger-title {
+        color: #f87171;
+    }
+
+    .danger-description {
+        margin-bottom: 14px;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .delete-user-button {
+        padding: 10px 14px;
+        border: 1px solid rgba(239, 68, 68, .3);
+        border-radius: 9px;
+        background: transparent;
+        color: #f87171;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .15s;
+    }
+
+    .delete-user-button:hover {
+        background: rgba(239, 68, 68, .10);
+        border-color: rgba(239, 68, 68, .5);
+    }
+
+    @media (max-width: 650px) {
+        .container {
+            width: min(100% - 20px, 1016px);
+            padding-top: 18px;
+        }
+
+        .topbar {
+            align-items: flex-start;
+        }
+
+        .brand-subtitle {
+            display: none;
+        }
+
+        .user-header-main {
+            align-items: flex-start;
+        }
+
+        .status {
+            margin-left: auto;
+        }
+
+        .user-name {
+            font-size: 20px;
+        }
+
+        .section,
+        .user-header {
+            padding: 18px;
+        }
+
+        .source {
+            align-items: flex-start;
+        }
+
+        .source-url {
+            padding-top: 2px;
+        }
+
+        .add-source {
+            flex-direction: column;
+        }
+
+        .add-source-button {
+            width: 100%;
+        }
+
+        .save-button {
+            width: 100%;
+        }
+    }
+
+/* ============================================================
+   VPS SOURCE DRAG & DROP
+   ============================================================ */
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.source {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 58px;
+    transition:
+        opacity .15s ease,
+        transform .15s ease,
+        background .15s ease;
+}
+
+.source.dragging {
+    opacity: .35;
+}
+
+.source.drag-over {
+    background: rgba(59, 130, 246, .06);
+}
+
+.drag-handle {
+    width: 28px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+    font-size: 18px;
+    line-height: 1;
+
+    cursor: grab;
+    user-select: none;
+
+    border-radius: 7px;
+    transition: .15s;
+}
+
+.drag-handle:hover {
+    color: #94a3b8;
+    background: rgba(148, 163, 184, .08);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.source-number {
+    flex-shrink: 0;
+    min-width: 32px;
+}
+
+.source-url {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.source-save-status {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+
+    padding: 10px 14px;
+
+    border: 1px solid rgba(34, 197, 94, .25);
+    border-radius: 9px;
+
+    background: #151b27;
+    color: #4ade80;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.30);
+
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+
+    transition: .2s;
+    z-index: 9999;
+}
+
+.source-save-status.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 700px) {
+    .source {
+        gap: 7px;
+    }
+
+    .drag-handle {
+        width: 22px;
+    }
+
+    .source-url {
+        font-size: 12px;
+    }
+}
+
+
+/* SOURCE REORDER FINAL */
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.sources-list .source {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 58px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s, opacity .15s;
+}
+
+.sources-list .source:last-child {
+    border-bottom: none;
+}
+
+.sources-list .source.dragging {
+    opacity: .35;
+}
+
+.sources-list .source.drag-over {
+    background: rgba(59, 130, 246, .07);
+}
+
+.drag-handle {
+    width: 28px;
+    min-width: 28px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+    font-size: 19px;
+    font-weight: 700;
+
+    cursor: grab;
+    user-select: none;
+
+    border-radius: 7px;
+}
+
+.drag-handle:hover {
+    color: #94a3b8;
+    background: rgba(148, 163, 184, .08);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.sources-list .source-number {
+    min-width: 32px;
+    flex-shrink: 0;
+    color: #60a5fa;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.sources-list .source-url {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.source-save-status {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+
+    padding: 10px 15px;
+
+    border: 1px solid rgba(34, 197, 94, .25);
+    border-radius: 9px;
+
+    background: #151b27;
+    color: #4ade80;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
+
+    opacity: 0;
+    transform: translateY(10px);
+
+    pointer-events: none;
+    z-index: 9999;
+
+    transition: .2s;
+}
+
+.source-save-status.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 700px) {
+    .sources-list .source {
+        gap: 7px;
+    }
+
+    .drag-handle {
+        width: 22px;
+        min-width: 22px;
+    }
+
+    .sources-list .source-url {
+        font-size: 12px;
+    }
+}
+
+/* SOURCE REORDER FINAL */
+
+
+/* ARROW BUTTONS CSS */
+
+.source-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.source-move-button {
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    background: var(--bg-secondary);
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.source-move-button:hover {
+    background: var(--card-hover);
+    border-color: var(--border-hover);
+    color: #60a5fa;
+}
+
+.source-move-button:active {
+    transform: scale(.92);
+}
+
+.source-move-button.disabled {
+    opacity: .25;
+    cursor: default;
+}
+
+.source-move-button.saving {
+    opacity: .5;
+    cursor: wait;
+}
+
+/* ARROW BUTTONS CSS */
+
+</style>
+
+<div class="container">
+
+    <div class="topbar">
+        <a href="{{ url_for('index') }}" class="brand">
+            <div class="brand-icon">MS</div>
+            <div>
+                <div class="brand-title">MultiSub</div>
+                <div class="brand-subtitle">Панель управления</div>
+            </div>
+        </a>
+
+        <a href="{{ url_for('index') }}" class="back-button">
+            ← Назад
+        </a>
+
+    </div>
+
+    <div class="user-card">
+
+        <!-- USER HEADER -->
+
+        <div class="user-header">
+            <div class="user-header-main">
+
+                <div class="user-avatar">
+                    {{ user.name[:1].upper() }}
+                </div>
+
+                <div class="user-title-wrap">
+                    <h1 class="user-name">{{ user.name }}</h1>
+
+                    <div class="token">
+                        {{ user.token[:8] }}...{{ user.token[-4:] }}
+                    </div>
+                </div>
+
+                {% if user.enabled %}
+                    <div class="status enabled">● Активен</div>
+                {% else %}
+                    <div class="status disabled">● Отключён</div>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        <!-- MULTILINK -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Мультиссылка
+            </div>
+
+            <div class="section-description">
+                Единая ссылка со всеми VPS-источниками пользователя
+            </div>
+
+            <div class="multilink-box">
+
+                <input
+                    id="subscriptionLink"
+                    class="multilink-input"
+                    type="text"
+                    value="{{ subscription_base_url }}/s/{{ user.token }}"
+                    readonly
+                >
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copySubscriptionLink()"
+                    title="Скопировать ссылку"
+                >
+                    📋
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Настройки пользователя
+            </div>
+
+            <form
+                method="post"
+                action="{{ url_for('update_user', token=user.token) }}"
+                class="settings-form"
+            >
+
+                <div>
+                    <label class="field-label" for="name">
+                        Имя пользователя
+                    </label>
+
+                    <input
+                        id="name"
+                        class="name-input"
+                        type="text"
+                        name="name"
+                        value="{{ user.name }}"
+                        placeholder="Имя пользователя"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+
+                <div class="status-row">
+
+                    <div class="status-description">
+                        <strong>Статус подписки</strong>
+                        <span>Управляет доступностью пользователя</span>
+                    </div>
+
+                    <label class="switch">
+                        <input
+                            type="checkbox"
+                            name="enabled"
+                            value="1"
+                            {% if user.enabled %}checked{% endif %}
+                        >
+                        <span class="slider"></span>
+                    </label>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Сохранить изменения
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- SOURCES -->
+
+        <div class="section">
+
+            <div class="section-title">
+                VPS-источники · {{ user.sources|length }}
+            </div>
+
+            <div class="section-description">
+                Источники, из которых собирается подписка пользователя
+            </div>
+
+            
+        {% if user.sources %}
+
+        <div
+            id="sources-list"
+            class="sources-list"
+            data-token="{{ user.token }}"
+        >
+
+            {% for source in user.sources %}
+
+            <div
+                class="source"
+                draggable="true"
+                data-source="{{ source }}"
+            >
+
+                <div class="source-controls">
+
+                    <div class="drag-handle" title="Перетащить VPS-источник">
+                        ⋮⋮
+                    </div>
+
+                    <button
+                        type="button"
+                        class="source-move-button source-up"
+                        title="Поднять выше"
+                    >▲</button>
+
+                    <button
+                        type="button"
+                        class="source-move-button source-down"
+                        title="Опустить ниже"
+                    >▼</button>
+
+                </div>
+
+                <div class="source-number">
+                    #{{ loop.index }}
+                </div>
+
+                <div class="source-url">
+                    {{ source }}
+                </div>
+
+                <form
+                    method="post"
+                    action="{{ url_for('delete_source', token=user.token, index=loop.index0) }}"
+                    onsubmit="return confirm('Удалить этот источник?')"
+                >
+                    <button
+                        type="submit"
+                        class="delete-source"
+                        title="Удалить VPS-источник"
+                    >
+                        🗑
+                    </button>
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            VPS-источники пока не добавлены.
+        </div>
+
+        {% endif %}
+
+
+
+            <form
+                method="post"
+                action="{{ url_for('add_source', token=user.token) }}"
+                class="add-source"
+            >
+
+                <input
+                    class="source-input"
+                    type="url"
+                    name="source"
+                    placeholder="https://адрес-vps/..."
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="add-source-button"
+                    title="Добавить VPS-источник"
+                >
+                    +
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- DANGER -->
+
+        <div class="section danger-section">
+
+            <div class="section-title danger-title">
+                Опасная зона
+            </div>
+
+            <div class="danger-description">
+                Удаление переместит пользователя в корзину.
+            </div>
+
+            <form
+                method="post"
+                action="{{ url_for('delete_user', token=user.token) }}"
+                onsubmit="return confirm('Удалить пользователя {{ user.name }}?')"
+            >
+                <button
+                    type="submit"
+                    class="delete-user-button"
+                >
+                    🗑 Удалить пользователя
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+function copySubscriptionLink() {
+
+    const input = document.getElementById("subscriptionLink");
+    const button = document.querySelector(".copy-button");
+
+    input.focus();
+    input.select();
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        navigator.clipboard.writeText(input.value)
+            .then(() => showCopySuccess(button))
+            .catch(() => fallbackCopy(input, button));
+
+    } else {
+
+        fallbackCopy(input, button);
+
+    }
+}
+
+
+function fallbackCopy(input, button) {
+
+    try {
+
+        const result = document.execCommand("copy");
+
+        if (result) {
+            showCopySuccess(button);
+        } else {
+            input.focus();
+            input.select();
+            alert("Ссылка выделена. Нажмите Ctrl+C для копирования.");
+        }
+
+    } catch (e) {
+
+        input.focus();
+        input.select();
+        alert("Ссылка выделена. Нажмите Ctrl+C для копирования.");
+
+    }
+}
+
+
+function showCopySuccess(button) {
+
+    const oldIcon = button.textContent;
+
+    button.textContent = "✓";
+
+    setTimeout(() => {
+        button.textContent = oldIcon;
+    }, 1200);
+}
+</script>
+
+
+
+
+
+<script>
+(function () {
+
+    const list = document.getElementById("sources-list");
+
+    if (!list) {
+        console.log("MultiSub: sources-list not found");
+        return;
+    }
+
+    console.log("MultiSub: source reorder enabled");
+
+    let dragged = null;
+
+    function updateNumbers() {
+
+        const items = list.querySelectorAll(".source");
+
+        items.forEach(function (item, index) {
+
+            const number = item.querySelector(".source-number");
+
+            if (number) {
+                number.textContent = "#" + (index + 1);
+            }
+
+        });
+    }
+
+    function getOrder() {
+
+        return Array.from(
+            list.querySelectorAll(".source")
+        ).map(function (item) {
+
+            return item.getAttribute("data-source");
+
+        });
+    }
+
+    function showStatus(message, error) {
+
+        let status =
+            document.getElementById("source-save-status");
+
+        if (!status) {
+
+            status = document.createElement("div");
+
+            status.id = "source-save-status";
+            status.className = "source-save-status";
+
+            document.body.appendChild(status);
+        }
+
+        status.textContent = message;
+
+        status.style.color =
+            error ? "#f87171" : "#4ade80";
+
+        status.style.borderColor =
+            error
+                ? "rgba(239,68,68,.30)"
+                : "rgba(34,197,94,.25)";
+
+        status.classList.add("show");
+
+        clearTimeout(status.timer);
+
+        status.timer = setTimeout(function () {
+
+            status.classList.remove("show");
+
+        }, 1800);
+    }
+
+    async function saveOrder() {
+
+        const order = getOrder();
+
+        console.log(
+            "MultiSub: saving source order",
+            order
+        );
+
+        try {
+
+            const response = await fetch(
+                "{{ url_for('reorder_sources', token=user.token) }}",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+
+                    body: JSON.stringify(order)
+                }
+            );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " + response.status
+                );
+            }
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error("Server rejected order");
+            }
+
+            showStatus("Порядок сохранён");
+
+        } catch (error) {
+
+            console.error(
+                "MultiSub reorder error:",
+                error
+            );
+
+            showStatus(
+                "Ошибка сохранения",
+                true
+            );
+        }
+    }
+
+
+    const items =
+        list.querySelectorAll(".source");
+
+
+    items.forEach(function (item) {
+
+        item.setAttribute(
+            "draggable",
+            "true"
+        );
+
+
+        item.addEventListener(
+            "dragstart",
+            function (event) {
+
+                dragged = item;
+
+                item.classList.add(
+                    "dragging"
+                );
+
+                event.dataTransfer.effectAllowed =
+                    "move";
+
+                event.dataTransfer.setData(
+                    "text/plain",
+                    item.getAttribute(
+                        "data-source"
+                    )
+                );
+            }
+        );
+
+
+        item.addEventListener(
+            "dragend",
+            function () {
+
+                item.classList.remove(
+                    "dragging"
+                );
+
+                list.querySelectorAll(
+                    ".source"
+                ).forEach(function (element) {
+
+                    element.classList.remove(
+                        "drag-over"
+                    );
+
+                });
+
+                if (dragged) {
+
+                    updateNumbers();
+
+                    saveOrder();
+
+                }
+
+                dragged = null;
+            }
+        );
+
+
+        item.addEventListener(
+            "dragover",
+            function (event) {
+
+                event.preventDefault();
+
+                if (
+                    !dragged ||
+                    dragged === item
+                ) {
+                    return;
+                }
+
+                const rect =
+                    item.getBoundingClientRect();
+
+                const middle =
+                    rect.top +
+                    rect.height / 2;
+
+
+                if (event.clientY < middle) {
+
+                    list.insertBefore(
+                        dragged,
+                        item
+                    );
+
+                } else {
+
+                    list.insertBefore(
+                        dragged,
+                        item.nextSibling
+                    );
+                }
+
+                list.querySelectorAll(
+                    ".source"
+                ).forEach(function (element) {
+
+                    element.classList.remove(
+                        "drag-over"
+                    );
+
+                });
+
+                item.classList.add(
+                    "drag-over"
+                );
+            }
+        );
+
+
+        item.addEventListener(
+            "dragleave",
+            function () {
+
+                item.classList.remove(
+                    "drag-over"
+                );
+            }
+        );
+
+    });
+
+
+    updateNumbers();
+
+})();
+</script>
+
+
+<script>
+(function () {
+
+    const list = document.getElementById("sources-list");
+
+    if (!list) {
+        console.log("MultiSub: sources-list not found");
+        return;
+    }
+
+    function updateNumbers() {
+
+        const items = list.querySelectorAll(".source");
+
+        items.forEach(function (item, index) {
+
+            const number = item.querySelector(".source-number");
+
+            if (number) {
+                number.textContent = "#" + (index + 1);
+            }
+
+        });
+
+        updateButtons();
+    }
+
+
+    function updateButtons() {
+
+        const items = Array.from(
+            list.querySelectorAll(".source")
+        );
+
+        items.forEach(function (item, index) {
+
+            const up = item.querySelector(".source-up");
+            const down = item.querySelector(".source-down");
+
+            if (up) {
+                up.classList.toggle(
+                    "disabled",
+                    index === 0
+                );
+            }
+
+            if (down) {
+                down.classList.toggle(
+                    "disabled",
+                    index === items.length - 1
+                );
+            }
+
+        });
+    }
+
+
+    function getOrder() {
+
+        return Array.from(
+            list.querySelectorAll(".source")
+        ).map(function (item) {
+
+            return item.dataset.source;
+
+        });
+    }
+
+
+    async function saveOrder() {
+
+        const response = await fetch(
+            "{{ url_for('reorder_sources', token=user.token) }}",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+
+                body: JSON.stringify(getOrder())
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "HTTP " + response.status
+            );
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error("Save failed");
+        }
+
+        console.log(
+            "MultiSub: порядок сохранён"
+        );
+    }
+
+
+    async function move(item, direction) {
+
+        const items = Array.from(
+            list.querySelectorAll(".source")
+        );
+
+        const index = items.indexOf(item);
+
+        if (index < 0) {
+            return;
+        }
+
+
+        if (direction === "up") {
+
+            if (index === 0) {
+                return;
+            }
+
+            list.insertBefore(
+                item,
+                items[index - 1]
+            );
+
+        }
+
+
+        else if (direction === "down") {
+
+            if (index === items.length - 1) {
+                return;
+            }
+
+            list.insertBefore(
+                items[index + 1],
+                item
+            );
+
+        }
+
+
+        updateNumbers();
+
+
+        const buttons =
+            item.querySelectorAll(
+                ".source-move-button"
+            );
+
+        buttons.forEach(function (button) {
+            button.classList.add("saving");
+        });
+
+
+        try {
+
+            await saveOrder();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "MultiSub: ошибка сохранения",
+                error
+            );
+
+        }
+
+
+        buttons.forEach(function (button) {
+            button.classList.remove("saving");
+        });
+
+    }
+
+
+    list.querySelectorAll(".source").forEach(
+        function (item) {
+
+            const up =
+                item.querySelector(".source-up");
+
+            const down =
+                item.querySelector(".source-down");
+
+
+            if (up) {
+
+                up.addEventListener(
+                    "click",
+                    function () {
+
+                        move(item, "up");
+
+                    }
+                );
+
+            }
+
+
+            if (down) {
+
+                down.addEventListener(
+                    "click",
+                    function () {
+
+                        move(item, "down");
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    updateNumbers();
+
+    console.log(
+        "MultiSub: ▲ ▼ готовы"
+    );
+
+})();
+</script>

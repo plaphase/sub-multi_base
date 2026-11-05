@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Результат — TEST</title>
+
+<style>
+body {
+    margin: 0;
+    background: #0b0f17;
+    color: #f3f6fb;
+    font-family: Arial, sans-serif;
+}
+
+.box {
+    max-width: 650px;
+    margin: 12vh auto;
+    padding: 28px;
+
+    background: #151b27;
+
+    border: 1px solid #293449;
+    border-radius: 16px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.info {
+    margin: 15px 0 20px;
+    color: #aab5c5;
+    line-height: 1.7;
+}
+
+.names {
+    color: #d5dce7;
+    line-height: 1.8;
+}
+
+.btn {
+    display: inline-block;
+
+    padding: 10px 14px;
+
+    border-radius: 9px;
+
+    background: #3b82f6;
+    color: white;
+
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <div class="title">
+        Готово
+    </div>
+
+    <div class="info">
+
+        Удалено источников:
+        <b>{{ removed }}</b>
+
+        <br>
+
+        Затронуто пользователей:
+        <b>{{ affected_users }}</b>
+
+    </div>
+
+
+    {% if affected_names %}
+
+    <div class="names">
+
+        {% for name in affected_names %}
+
+            • {{ name }}<br>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+    <br>
+
+    <a
+        class="btn"
+        href="/bulk"
+    >
+        Вернуться к массовым операциям
+    </a>
+
+</div>
+
+</body>
+</html>

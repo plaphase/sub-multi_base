@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Новый пользователь · MultiSub Panel</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+        }
+
+        .container {
+            width: min(600px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 40px 0 60px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            color: var(--text);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 750;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .field {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fff;
+            color: var(--text);
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .hint {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .cancel {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+        }
+
+        .cancel:hover {
+            color: var(--text);
+        }
+
+        .create {
+            border: 1px solid var(--primary);
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .create:hover {
+            background: var(--primary-hover);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: min(100% - 20px, 600px);
+                padding-top: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{{ url_for('index') }}" class="back">
+        ← Назад к пользователям
+    </a>
+
+
+    <div class="card">
+
+        <h1 class="title">
+            Новый пользователь
+        </h1>
+
+        <div class="subtitle">
+            Создание нового пользователя MultiSub
+        </div>
+
+        <form
+            method="post"
+            action="{{ url_for('create_user') }}"
+        >
+
+            <div class="field">
+
+                <label for="name">
+                    Имя пользователя
+                </label>
+
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="Например: phase"
+                    required
+                    autofocus
+                >
+
+                <div class="hint">
+                    Это имя будет отображаться в панели.
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="button cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="button create"
+                >
+                    Создать пользователя
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

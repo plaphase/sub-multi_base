@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Журнал событий — MultiSub</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f17;--card:#151b27;--border:#273247;--text:#f3f6fb;--muted:#8995a8;--blue:#5b8cff;--green:#36d399;--red:#ff6b7a;--yellow:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.container{width:min(1500px,calc(100% - 28px));margin:auto;padding:14px 0 24px}
+.header,.actions,.toolbar,.stats,.card-head,.event-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header{margin-bottom:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{display:none}
+h1{font-size:20px;margin:0;font-weight:750}
+.subtitle,.muted{color:var(--muted);font-size:12px}
+.actions{flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:var(--card);color:var(--text);padding:10px 14px;border-radius:10px;text-decoration:none;cursor:pointer;font-size:13px;font-weight:650}
+.btn:hover{border-color:#526582}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-value{font-size:19px;font-weight:800;margin:0}
+.stat-value.green{color:var(--green)}.stat-value.red{color:var(--red)}.stat-value.blue{color:var(--blue)}
+.card{border:1px solid var(--border);border-radius:11px;background:var(--card);overflow:hidden}
+.card-head{display:none}
+.card-title{font-weight:750;font-size:15px}
+.toolbar{padding:10px;justify-content:flex-start;flex-wrap:wrap;border-bottom:1px solid var(--border);gap:8px}
+input,select{background:#0c121d;border:1px solid #303c50;border-radius:9px;color:var(--text);padding:10px 12px;min-height:40px;font:inherit}
+input{flex:1;min-width:180px}select{min-width:130px}
+input:focus,select:focus{outline:1px solid var(--blue);border-color:var(--blue)}
+.toggle{display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;white-space:nowrap}
+.toggle input{min-width:auto;min-height:auto;flex:initial;accent-color:var(--blue)}
+.status{display:none}
+.status.error{color:var(--red);background:#2a151e}
+.logs{padding:8px;max-height:calc(100vh - 245px);min-height:300px;overflow:auto;background:#0a0e15}
+.event{border:1px solid #202b3b;border-left:3px solid #64748b;background:#101722;border-radius:7px;padding:8px 11px;margin-bottom:5px}
+.event.success{border-left-color:var(--green)}.event.error{border-left-color:var(--red)}.event.warning{border-left-color:var(--yellow)}.event.request{border-left-color:var(--blue)}
+.event-top{justify-content:flex-start;flex-wrap:wrap;margin-bottom:3px;gap:8px}
+.badge{font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 7px;border-radius:6px;background:#263247;color:#d5deed}
+.success .badge{color:var(--green);background:#123127}.error .badge{color:var(--red);background:#351b25}.warning .badge{color:var(--yellow);background:#332914}.request .badge{color:#8db0ff;background:#172747}
+.time{font-size:11px;color:var(--muted);font-family:Consolas,monospace}
+.message{font-family:Consolas,"SFMono-Regular",monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;color:#c6d0df}
+.event-meta{display:none}
+.friendly-message{font-size:13px;font-weight:650;color:#e5edf8;line-height:1.5;margin-top:5px}
+.friendly-details{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:5px;color:#9eacc0;font-size:11px}
+.technical-details{margin-top:6px;font-size:11px;color:#8ea0b8}
+.technical-details summary{cursor:pointer;user-select:none;width:max-content}
+.technical-details .message{margin-top:6px;padding:8px;background:#0b111b;border-radius:5px}
+
+.empty{padding:55px 15px;text-align:center;color:var(--muted)}
+.footer{padding:7px 11px;color:var(--muted);font-size:11px;border-top:1px solid var(--border);display:flex;justify-content:flex-start;gap:12px;flex-wrap:wrap}.footer span:nth-child(2){display:none}
+mark{background:#5b8cff44;color:#fff;border-radius:2px}
+@media(max-width:720px){.container{width:calc(100% - 14px);padding-top:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.stat{padding:8px}.stat-label{font-size:11px}.stat-value{font-size:18px}h1{font-size:18px}.actions{width:100%}.actions .btn{flex:1;text-align:center;padding:8px}.toolbar>*{width:100%}.toggle{width:auto}.logs{padding:6px;min-height:250px;max-height:calc(100vh - 320px)}.event{padding:7px 8px}.message{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="header">
+  <div class="brand"><div class="logo">MS</div><div><h1>Журнал событий</h1></div></div>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('index') }}">← Назад</a>
+    <button class="btn primary" id="refreshBtn" type="button">↻ Обновить</button>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stat"><div class="stat-label">Всего запросов</div><div class="stat-value blue" id="totalCount">—</div></div>
+  <div class="stat"><div class="stat-label">Успешные запросы</div><div class="stat-value green" id="successCount">—</div></div>
+  <div class="stat"><div class="stat-label">Запросы с ошибками</div><div class="stat-value red" id="errorCount">—</div></div>
+  <div class="stat"><div class="stat-label">Незавершённые запросы</div><div class="stat-value" id="warningCount">—</div></div>
+  <div class="stat"><div class="stat-label">Показано после фильтрации</div><div class="stat-value" id="visibleCount">—</div></div>
+</section>
+
+<section class="card">
+  
+  {% if log_error %}
+  <div class="status error">Не удалось загрузить журнал: {{ log_error }}</div>
+  {% else %}
+{% endif %}
+  <div class="toolbar">
+    <input id="searchInput" type="search" placeholder="Поиск по тексту, пользователю, источнику…" autocomplete="off" aria-label="Поиск по журналу">
+    <select id="levelFilter" aria-label="Фильтр по уровню"><option value="all">Все уровни</option><option value="error">Ошибки</option><option value="warning">Предупреждения</option><option value="success">Успешные</option><option value="info">Информация</option></select>
+    <select id="typeFilter" aria-label="Фильтр по событию"><option value="all">Все события</option><option value="request">Запрос подписки</option><option value="source">Источники</option><option value="result">Результат</option><option value="other">Прочее</option></select>
+    <label class="toggle"><input id="autoRefresh" type="checkbox" checked> Автообновление</label>
+  </div>
+  <div class="logs" id="logsContainer" aria-live="polite">
+  {% if events %}
+    {% for event in events | reverse %}
+    <article class="event {{ event.level }} {{ event.kind }}"
+             data-level="{{ event.level }}"
+             data-type="{{ event.kind }}"
+             data-types="{{ event.kind }}{% if event.kind == 'request' and event.has_sources %} source{% endif %}{% if event.kind == 'request' and event.has_result %} result{% endif %}"
+             data-search="{{ event.search }}">
+      <div class="event-header">
+        <div class="event-title">
+          {% if event.kind == 'request' %}
+            <strong>{{ event.user_name or event.user_key }}</strong>
+            <span class="event-badge">
+              {% if event.level == 'success' %}Успешно
+              {% elif event.level == 'error' %}Ошибка
+              {% else %}Не завершён{% endif %}
+            </span>
+          {% else %}
+            <strong>{{ event.log_level }}</strong>
+          {% endif %}
+        </div>
+        <time>{{ event.timestamp or 'Время не указано' }}</time>
+      </div>
+
+      {% if event.kind == 'request' %}
+      <div class="event-message">
+        Источников: {{ event.expected_sources }}
+        · Подключений: {{ event.connections }}
+        · Ошибок: {{ event.errors }}
+      </div>
+
+      {% if event.sources %}
+      <div class="grouped-sources">
+        {% for source in event.sources %}
+        <div class="grouped-source">
+          <div class="source-heading">
+            <strong>{{ source.index }}. {{ source.name }}</strong>
+            <span>{{ source.outcome }}</span>
+          </div>
+          <div class="source-meta">
+            {% if source.status is not none %}HTTP {{ source.status }}{% endif %}
+            {% if source.http_time %} · Ответ: {{ source.http_time }}{% endif %}
+            {% if source.time %} · Источник: {{ source.time }}{% endif %}
+            {% if source.connections %} · Подключений: {{ source.connections }}{% endif %}
+            {% if source.size %} · Размер: {{ source.size }} байт{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="event-message">{{ event.search }}</div>
+      {% endif %}
+
+      <details class="technical-details">
+        <summary>Технические подробности</summary>
+        <pre>{{ event.raw_lines | join('\n') }}</pre>
+      </details>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div class="empty">Записей в журнале пока нет.</div>
+  {% endif %}
+  <div class="empty" id="noMatches" hidden>По заданным фильтрам ничего не найдено.</div>
+  </div>
+  <div class="footer"><span id="rangeInfo">—</span></div>
+</section>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const container = $('logsContainer');
+  const search = $('searchInput'), level = $('levelFilter'), type = $('typeFilter');
+  const auto = $('autoRefresh');
+  let timer = null;
+  const initialQuery = new URLSearchParams(location.search);
+  search.value = initialQuery.get('q') || '';
+  level.value = initialQuery.get('level') || 'all';
+  type.value = initialQuery.get('type') || 'all';
+
+  function applyFilters() {
+    const q = search.value.trim().toLocaleLowerCase('ru');
+    let visible = 0, success = 0, errors = 0, warnings = 0, all = 0;
+    const cards = [...container.querySelectorAll('.event')];
+    cards.forEach(card => {
+      all++;
+      const text = (card.dataset.search + ' ' + card.innerText).toLocaleLowerCase('ru');
+      const matches = (!q || text.includes(q)) &&
+        (level.value === 'all' || card.dataset.level === level.value) &&
+        (type.value === 'all' || (card.dataset.types || card.dataset.type || '').split(/\s+/).includes(type.value));
+      card.hidden = !matches;
+      if (matches) visible++;
+      if (card.dataset.level === 'success') success++;
+      else if (card.dataset.level === 'error') errors++;
+      else if (card.dataset.level === 'warning') warnings++;
+    });
+    $('totalCount').textContent = all;
+    $('successCount').textContent = success;
+    $('errorCount').textContent = errors;
+    $('warningCount').textContent = warnings;
+    $('visibleCount').textContent = visible;
+    $('noMatches').hidden = visible !== 0 || all === 0;
+    $('rangeInfo').textContent = `Показано ${visible} из ${all} записей`;
+    const params = new URLSearchParams();
+    if (search.value) params.set('q', search.value);
+    if (level.value !== 'all') params.set('level', level.value);
+    if (type.value !== 'all') params.set('type', type.value);
+    history.replaceState(null, '', location.pathname + (params.size ? '?' + params : ''));
+  }
+  function scheduleRefresh() {
+    clearInterval(timer);
+    if (auto.checked) timer = setInterval(() => {
+      if (document.visibilityState === 'visible' && !document.activeElement.matches('input,select')) {
+        location.reload();
+      }
+    }, 15000);
+  }
+  [search, level, type].forEach(el => el.addEventListener(el === search ? 'input' : 'change', applyFilters));
+  auto.addEventListener('change', scheduleRefresh);
+  $('refreshBtn').addEventListener('click', () => location.reload());
+  applyFilters();
+  scheduleRefresh();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data and logs
+users.json
+users-trash.json
+settings.json
+multisub.log
+*.log
+test-data/
+
+# Local backups
+*.backup
+*.backup-*
+*.bak
+*.old
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store

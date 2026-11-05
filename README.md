@@ -40,4 +40,3 @@ sudo bash tests/test_installer_paths.sh
 sudo bash tests/test_create_config.sh
 sudo bash tests/test_install_flow.sh
 ```
-

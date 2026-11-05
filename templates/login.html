@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiSub — Вход</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b0f17;
+            --card: #151b27;
+            --border: #242d3d;
+            --text: #f1f5f9;
+            --muted: #8b98aa;
+            --accent: #6d8cff;
+            --accent-hover: #7c98ff;
+            --danger: #ff647c;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background:
+                radial-gradient(circle at top, #18233a 0%, transparent 42%),
+                var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 390px;
+            padding: 34px;
+            background: rgba(21, 27, 39, 0.96);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
+        }
+
+        .logo {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #607cff, #8a6dff);
+            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(99, 112, 255, .28);
+        }
+
+        h1 {
+            margin: 0;
+            text-align: center;
+            font-size: 23px;
+            font-weight: 750;
+        }
+
+        .subtitle {
+            margin: 8px 0 26px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #b7c1d0;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        input {
+            width: 100%;
+            height: 44px;
+            padding: 0 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            background: #0f1520;
+            color: var(--text);
+            font-size: 14px;
+            transition: .15s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(109, 140, 255, .12);
+        }
+
+        button {
+            width: 100%;
+            height: 44px;
+            margin-top: 6px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        .error {
+            margin-bottom: 16px;
+            padding: 11px 13px;
+            border: 1px solid rgba(255, 100, 124, .25);
+            border-radius: 10px;
+            background: rgba(255, 100, 124, .08);
+            color: var(--danger);
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">MS</div>
+
+    <h1>MultiSub Panel</h1>
+    <div class="subtitle">Авторизация администратора</div>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="field">
+            <label for="username">Логин</label>
+            <input
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                required
+                autofocus
+            >
+        </div>
+
+        <div class="field">
+            <label for="password">Пароль</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+            >
+        </div>
+
+        <button type="submit">Войти</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
