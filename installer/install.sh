@@ -213,6 +213,7 @@ fi
 
 printf '\n[6/6] Настройка Nginx и проверка доступа...\n'
 PUBLIC_HOST="$PUBLIC_HOST" PANEL_PORT="$PANEL_PORT" bash "$SCRIPT_DIR/lib/install-nginx-site.sh"
+bash "$SCRIPT_DIR/lib/install-management-command.sh"
 
 if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -q '^Status: active'; then
     if ! ufw status 2>/dev/null | grep -Eq '^80/tcp[[:space:]]+ALLOW'; then
@@ -228,4 +229,5 @@ printf '\n[OK] Установка завершена.\n'
 printf '[INFO] Панель: http://%s\n' "$PUBLIC_HOST"
 printf '[INFO] Администратор: прочитай PANEL_USERNAME в %s\n' "$CONFIG_FILE"
 printf '[INFO] Случайный пароль сохранён в %s (права 600).\n' "$CONFIG_FILE"
+printf '[INFO] Меню управления: sudo subpanel\n'
 printf '[WARN] HTTP не шифрует логин, пароль или сессионную cookie. Настрой HTTPS перед публичным использованием.\n'
