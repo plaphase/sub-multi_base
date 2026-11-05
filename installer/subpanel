@@ -241,9 +241,14 @@ uninstall_panel() {
             fi
         done
         if (( unknown == 0 )); then
-            rmdir -- "$BACKUP_DIR" 2>/dev/null || true
-        else
+            if ! rmdir -- "$BACKUP_DIR" 2>/dev/null && [[ -d "$BACKUP_DIR" ]]; then
+                unknown=1
+            fi
+        fi
+        if (( unknown != 0 )); then
             printf '[ПРЕДУПРЕЖДЕНИЕ] В каталоге резервных копий остались неизвестные файлы: %s\n' "$BACKUP_DIR" >&2
+        else
+            :
         fi
     fi
 
