@@ -91,7 +91,7 @@ health_check() {
 }
 
 change_credentials() {
-    local current_user new_user password password_again rollback_file
+    local current_user new_user password password_again rollback_file health_ok=0
     local config_file="$CONFIG_DIR/panel.env"
     [[ -f "$config_file" && ! -L "$config_file" ]] || fail "Не найдена конфигурация панели."
     [[ "$(stat -c '%U:%G:%a' -- "$config_file")" == "root:root:600" ]] ||
@@ -150,12 +150,25 @@ PY
         fail "Не удалось обновить конфигурацию."
     fi
 
-    if ! systemctl restart multisub-panel.service || ! curl --connect-timeout 3 --max-time 6 -fsS \
-        -o /dev/null "http://127.0.0.1:$PANEL_PORT/health"; then
+    if ! systemctl restart multisub-panel.service; then
         cp --preserve=mode,ownership -- "$rollback_file" "$config_file"
         rm -f -- "$rollback_file"
         systemctl restart multisub-panel.service || true
-        fail "Смена данных входа не прошла проверку; прежние настройки восстановлены."
+        fail "Служба не перезапустилась; прежние настройки восстановлены."
+    fi
+    for _ in {1..15}; do
+        if curl --connect-timeout 2 --max-time 4 -fsS -o /dev/null \
+            "http://127.0.0.1:$PANEL_PORT/health"; then
+            health_ok=1
+            break
+        fi
+        sleep 1
+    done
+    if [[ "$health_ok" -ne 1 ]]; then
+        cp --preserve=mode,ownership -- "$rollback_file" "$config_file"
+        rm -f -- "$rollback_file"
+        systemctl restart multisub-panel.service || true
+        fail "Новая конфигурация не прошла проверку; прежние настройки восстановлены."
     fi
     rm -f -- "$rollback_file"
     printf '[OK] Данные входа обновлены для логина %s; активные сессии сброшены.\n' "$new_user"
