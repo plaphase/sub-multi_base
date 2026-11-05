@@ -240,7 +240,11 @@ uninstall_panel() {
                 unknown=1
             fi
         done
-        if (( unknown == 0 )); then rmdir -- "$BACKUP_DIR" 2>/dev/null || true; fi
+        if (( unknown == 0 )); then
+            rmdir -- "$BACKUP_DIR" 2>/dev/null || true
+        else
+            printf '[ПРЕДУПРЕЖДЕНИЕ] В каталоге резервных копий остались неизвестные файлы: %s\n' "$BACKUP_DIR" >&2
+        fi
     fi
 
     if pgrep -u "$uid" >/dev/null 2>&1; then
@@ -281,6 +285,6 @@ while true; do
         3) change_credentials ;;
         4) uninstall_panel ;;
         0) exit 0 ;;
-        *) printf 'Выбери 0, 1, 2 или 3.\n' ;;
+        *) printf 'Выбери 0, 1, 2, 3 или 4.\n' ;;
     esac
 done
