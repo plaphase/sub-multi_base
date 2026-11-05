@@ -14,6 +14,15 @@ fail() {
     exit 1
 }
 
+ask() {
+    local prompt="$1"
+    if [[ -t 1 && -r /dev/tty ]]; then
+        read -r -p "$prompt" REPLY </dev/tty
+    else
+        read -r -p "$prompt" REPLY
+    fi
+}
+
 [[ "$EUID" -eq 0 ]] || fail "Запусти скрипт от root."
 
 validate_path() {
@@ -67,7 +76,8 @@ if ! [[ "$PANEL_PORT" =~ ^[0-9]+$ ]] || (( PANEL_PORT < 1 || PANEL_PORT > 65535 
     fail "Некорректный порт."
 fi
 
-read -r -p "Логин администратора [admin]: " PANEL_USERNAME
+ask "Логин администратора [admin]: "
+PANEL_USERNAME="$REPLY"
 PANEL_USERNAME="${PANEL_USERNAME:-admin}"
 [[ "$PANEL_USERNAME" =~ ^[a-zA-Z0-9_.-]{3,64}$ ]] || fail "Некорректный логин."
 

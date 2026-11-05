@@ -26,6 +26,15 @@ info() {
     printf '[INFO] %s\n' "$1"
 }
 
+ask() {
+    local prompt="$1"
+    if [[ -t 1 && -r /dev/tty ]]; then
+        read -r -p "$prompt" REPLY </dev/tty
+    else
+        read -r -p "$prompt" REPLY
+    fi
+}
+
 cleanup() {
     if [[ "$STATE_CREATED" -eq 1 ]]; then
         rm -f -- "$STATE_FILE"
@@ -122,7 +131,8 @@ fi
 
 PUBLIC_HOST="${PUBLIC_HOST:-}"
 if [[ -z "$PUBLIC_HOST" ]]; then
-    read -r -p "Домен или IPv4-адрес для доступа к панели: " PUBLIC_HOST
+    ask "Домен или IPv4-адрес для доступа к панели: "
+    PUBLIC_HOST="$REPLY"
 fi
 python3 - "$PUBLIC_HOST" <<'PY' || fail "Укажи корректное доменное имя или IPv4-адрес."
 import ipaddress
@@ -141,12 +151,13 @@ except ipaddress.AddressValueError:
         raise SystemExit(1)
 PY
 
-printf '\n[WARN] В этом режиме панель будет доступна по HTTP без шифрования. Не используй его для передачи настоящих паролей через Интернет.\n'
+printf '\n[WARN] HTTP не шифрует логин, пароль или cookie сессии. Для публичного доступа настрой HTTPS перед использованием настоящих учётных данных.\n'
 HTTP_CONFIRM="${INSTALLER_CONFIRM_HTTP:-}"
 if [[ -z "$HTTP_CONFIRM" ]]; then
-    read -r -p "Продолжить HTTP-установку для теста? [y/N]: " HTTP_CONFIRM
+    ask "Продолжить установку без TLS? [y/N]: "
+    HTTP_CONFIRM="$REPLY"
 fi
-[[ "$HTTP_CONFIRM" =~ ^([Yy]|[Yy][Ee][Ss])$ ]] || fail "Установка HTTP отменена."
+[[ "$HTTP_CONFIRM" =~ ^([Yy]|[Yy][Ee][Ss])$ ]] || fail "Установка без TLS отменена."
 
 if [[ "${INSTALLER_DRY_RUN:-0}" == "1" ]]; then
     printf '\n[DRY RUN] Режим: %s\n' "$MODE"
@@ -217,4 +228,4 @@ printf '\n[OK] Установка завершена.\n'
 printf '[INFO] Панель: http://%s\n' "$PUBLIC_HOST"
 printf '[INFO] Администратор: прочитай PANEL_USERNAME в %s\n' "$CONFIG_FILE"
 printf '[INFO] Случайный пароль сохранён в %s (права 600).\n' "$CONFIG_FILE"
-printf '[WARN] HTTP не шифрует логин, пароль или сессионную cookie; оставь сайт только для теста до настройки HTTPS.\n'
+printf '[WARN] HTTP не шифрует логин, пароль или сессионную cookie. Настрой HTTPS перед публичным использованием.\n'

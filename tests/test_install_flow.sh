@@ -28,8 +28,8 @@ DRY_RUN_ENV=(
 run_new_mode() {
     local state_file="$TEST_ROOT/new.state"
     local data_dir="/var/lib/codex-installer-flow-$$-new"
-    printf '1\n%s\n' "$data_dir" |
-        env "${DRY_RUN_ENV[@]}" STATE_FILE="$state_file" PUBLIC_HOST=127.0.0.1 \
+    printf '1\n' |
+        env "${DRY_RUN_ENV[@]}" DEFAULT_DATA_DIR="$data_dir" STATE_FILE="$state_file" PUBLIC_HOST=127.0.0.1 \
         INSTALLER_CONFIRM_HTTP=yes INSTALLER_DRY_RUN=1 \
         bash "$INSTALLER_DIR/install.sh" >"$TEST_ROOT/new.log" 2>&1 || {
             cat "$TEST_ROOT/new.log" >&2
@@ -51,8 +51,9 @@ run_existing_mode() {
     mkdir -m 0750 -- "$source_dir"
     printf '{}\n' > "$source_dir/users.json"
 
-    printf '2\n%s\n%s\n' "$source_dir" "$data_dir" |
-        env "${DRY_RUN_ENV[@]}" STATE_FILE="$state_file" PUBLIC_HOST=127.0.0.1 \
+    printf '2\n' |
+        env "${DRY_RUN_ENV[@]}" DEFAULT_DATA_DIR="$data_dir" MULTISUB_DATA_DIR="$source_dir" \
+        STATE_FILE="$state_file" PUBLIC_HOST=127.0.0.1 \
         INSTALLER_CONFIRM_HTTP=yes INSTALLER_DRY_RUN=1 \
         bash "$INSTALLER_DIR/install.sh" >"$TEST_ROOT/existing.log" 2>&1 || {
             cat "$TEST_ROOT/existing.log" >&2
